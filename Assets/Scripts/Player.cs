@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
     private float axis_input_speed;
     private CapsuleCollider2D this_collider = null;
     private UIManager UIMan = null;
+    private GameManager gameManager = null;
 
     //PowerUps
     private float tripleShot_StopTime;
@@ -76,6 +77,12 @@ public class Player : MonoBehaviour
         var obj = GameObject.Find("GUI Canvas");
         if (obj != null)
             UIMan = obj.GetComponent<UIManager>();
+        if (gameManager == null)
+        {
+            var tmp = GameObject.Find("Game_Manager");
+            if (tmp != null)
+                gameManager = tmp.GetComponent<GameManager>();
+        }
     }
 
 
@@ -164,8 +171,11 @@ public class Player : MonoBehaviour
         if (!ShildsEnabled)
             Lives--;
 
+        UIMan.SetPlayerLives(Lives);
         if (Lives == 0)
         {
+            UIMan.EndGame();
+            gameManager.SetGameOverState(true);
             if (spawn_man != null)
                 spawn_man.ReportPlayerDeath();
             else
@@ -175,6 +185,7 @@ public class Player : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
 
     #region PowerUps
 
