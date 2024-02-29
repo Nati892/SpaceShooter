@@ -20,10 +20,19 @@ public class Enemy : MonoBehaviour
     private bool Die_on_range_end = true;
 
     private Vector3 StartingPoint;
+    private static Player player;
     // Start is called before the first frame update
     void Start()
     {
         StartingPoint = transform.position;
+        if (player == null)
+        {
+            var tmp = GameObject.Find("Player2d");
+            if (tmp != null)
+            {
+                player = tmp.GetComponent<Player>();
+            }
+        }
     }
 
     // Update is called once per frame
@@ -56,20 +65,33 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        int score = 0;
         if (other.tag == "Laser")
         {
+            score = 5;
             Destroy(other.gameObject);
             Destroy(this.gameObject);
         }
         if (other.tag == "Player")
         {
-            Player p = other.transform.GetComponent<Player>();
-            if (p != null)
+            if (player != null)
             {
-                p.RecieveDamage();
+                score = 3;
+                player.RecieveDamage();
                 Destroy(this.gameObject);
             }
         }
+
+        if (player == null)
+        {
+            Debug.LogError("Enemy::OnTriggerEnter2D: cant find player object to add score to it.");
+        }
+        else
+        {
+            player.AddScore(score);
+        }
+
+        //Add Score
     }
 
 

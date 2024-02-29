@@ -35,6 +35,10 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private int Lives = 3;
+
+    [SerializeField]
+    private int Score = 0;
+
     #endregion
 
     #region Privates
@@ -43,7 +47,7 @@ public class Player : MonoBehaviour
     private SpawnManager spawn_man = null;
     private float axis_input_speed;
     private CapsuleCollider2D this_collider = null;
-
+    private UIManager UIMan = null;
 
     //PowerUps
     private float tripleShot_StopTime;
@@ -69,7 +73,9 @@ public class Player : MonoBehaviour
         if (ShieldGameObject != null)
             ShieldGameObject.SetActive(false);
         ShrinkCollider();
-
+        var obj = GameObject.Find("GUI Canvas");
+        if (obj != null)
+            UIMan = obj.GetComponent<UIManager>();
     }
 
 
@@ -260,6 +266,17 @@ public class Player : MonoBehaviour
     }
 
     #endregion
+
+    #endregion
+
+
+    #region UI
+    public void AddScore(int score = 0)
+    {
+        this.Score += score;
+        if (UIMan != null)
+            UIMan.SetScore(this.Score);
+    }
 
     #endregion
 }
