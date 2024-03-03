@@ -16,6 +16,12 @@ public class Player : MonoBehaviour
     private GameObject ShieldGameObject;
 
     [SerializeField]
+    private GameObject[] EngineHits;
+
+    [SerializeField]
+    private AudioClip LaserShootingSound;
+
+    [SerializeField]
     private float x_speed_modifier = 0.1f;
 
     [SerializeField]
@@ -49,7 +55,8 @@ public class Player : MonoBehaviour
     private CapsuleCollider2D this_collider = null;
     private UIManager UIMan = null;
     private GameManager gameManager = null;
-
+    private AudioSource Asource = null;
+    private AudioManager A_Man = null;
     //PowerUps
     private float tripleShot_StopTime;
     private float SpeedBoost_StopTime;
@@ -83,6 +90,17 @@ public class Player : MonoBehaviour
             if (tmp != null)
                 gameManager = tmp.GetComponent<GameManager>();
         }
+        if (Asource == null)
+        {
+            var tmp = gameObject.GetComponent<AudioSource>();
+            if (tmp != null)
+                Asource = tmp;
+        }
+        if (Asource != null)
+        {
+            Asource.volume = 0.3f;
+        }
+        A_Man = AudioManager.GetInstance();
     }
 
 
@@ -161,6 +179,9 @@ public class Player : MonoBehaviour
                     Instantiate(TripleShotPrefab, transform.position, Quaternion.identity);
                     Debug.Log("Fire laser!");
                 }
+
+                if (LaserShootingSound != null)
+                    Asource.PlayOneShot(LaserShootingSound);
             }
         }
 
@@ -171,6 +192,7 @@ public class Player : MonoBehaviour
         if (!ShildsEnabled)
             Lives--;
 
+        AddEngineHit();
         UIMan.SetPlayerLives(Lives);
         if (Lives == 0)
         {
@@ -182,10 +204,29 @@ public class Player : MonoBehaviour
             {
                 Debug.LogError("Player::DecLives, Spawn manager is null");
             }
+            DestroyEngineHitPoints();
+            if (A_Man != null)
+                A_Man.PlaySoundEffect(AudioManager.SoundEffects.Explosion);
             Destroy(this.gameObject);
         }
     }
 
+    private int CurrentEngineHits = 0;
+    public void AddEngineHit()
+    {
+        if (EngineHits.Length > CurrentEngineHits)
+        {
+            EngineHits[CurrentEngineHits].SetActive(true);
+            CurrentEngineHits++;
+        }
+    }
+
+    public void DestroyEngineHitPoints()
+    {
+        foreach (var t in EngineHits)
+            if (t != null)
+                Destroy(t.gameObject);
+    }
 
     #region PowerUps
 

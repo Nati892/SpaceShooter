@@ -30,21 +30,13 @@ public class SpawnManager : MonoBehaviour
     private GameObject PowerUpsContainer;
 
     private bool _Spawn_Enemies = true;
-    // Start is called before the first frame update
-    void Start()
+
+    public void StartSpwaning()
     {
         if (PowerUpsPrefabs != null)
             StartCoroutine(SpawnPowerUp_TripleShot());
         if (SpawnedEnemy != null)
             StartCoroutine(SpawnEnemies());
-    }
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-     
     }
 
     IEnumerator SpawnEnemies()

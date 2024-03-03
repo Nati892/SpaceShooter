@@ -20,10 +20,12 @@ public class PowerUp : MonoBehaviour
     [SerializeField]
     private PowerUpId PowerUpType = PowerUpId.TripleShot;
 
+    private AudioManager AMan;
+
 
     void Start()
     {
-
+        AMan = AudioManager.GetInstance();
     }
 
     void Update()
@@ -61,6 +63,7 @@ public class PowerUp : MonoBehaviour
                         player.EnablePowerUp_Shields(5f);
                         break;
                 }
+                AMan.PlaySoundEffect(AudioManager.SoundEffects.PowerUp);
             }
             Destroy(this.gameObject);
         }

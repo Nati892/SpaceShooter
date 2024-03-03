@@ -19,8 +19,10 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private bool Die_on_range_end = true;
 
+    private Animator animator;
     private Vector3 StartingPoint;
     private static Player player;
+    private AudioManager audioManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +35,9 @@ public class Enemy : MonoBehaviour
                 player = tmp.GetComponent<Player>();
             }
         }
+        if (animator == null)
+            animator = GetComponent<Animator>();
+        audioManager = AudioManager.GetInstance();
     }
 
     // Update is called once per frame
@@ -65,20 +70,21 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+
         int score = 0;
         switch (other.tag)
         {
             case "Laser":
                 score = 5;
                 Destroy(other.gameObject);
-                Destroy(this.gameObject);
+                Death();
                 break;
             case "Player":
                 if (player != null)
                 {
                     score = 3;
                     player.RecieveDamage();
-                    Destroy(this.gameObject);
+                    Death();
                 }
                 break;
             default:
@@ -95,6 +101,25 @@ public class Enemy : MonoBehaviour
         }
 
         //Add Score
+    }
+    private bool IsDead = false;
+
+    private void Death()
+    {
+  
+        Speed = 0;
+        if (animator == null)
+            return;
+
+        if (IsDead)
+            return;
+        IsDead = true;
+
+        animator.SetTrigger("OnEnemyDeath");
+        if (audioManager != null)
+            audioManager.PlaySoundEffect(AudioManager.SoundEffects.Explosion);
+        Destroy(this.gameObject, 0.5f);
+
     }
 
 
