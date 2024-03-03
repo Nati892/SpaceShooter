@@ -5,6 +5,12 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
+    private GameObject LaserPrefab;
+
+    [SerializeField]
+    private float laser_start_offset = -0.6f;
+
+    [SerializeField]
     private float Speed = 4;
 
     [SerializeField]
@@ -38,6 +44,7 @@ public class Enemy : MonoBehaviour
         if (animator == null)
             animator = GetComponent<Animator>();
         audioManager = AudioManager.GetInstance();
+        StartCoroutine(ShootCoroutine());
     }
 
     // Update is called once per frame
@@ -66,6 +73,27 @@ public class Enemy : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+    }
+
+
+    IEnumerator ShootCoroutine()
+    {
+        float FireInterval;
+        while (true)
+        {
+            FireInterval = Random.Range(1, 4);
+            yield return new WaitForSeconds(FireInterval);
+            ShootLaser();
+        }
+    }
+    private void ShootLaser()
+    {
+        if (LaserPrefab == null)
+            return;
+        var obj = Instantiate(LaserPrefab, transform.position + new Vector3(0.0f, laser_start_offset, 0f), Quaternion.identity);
+        //obj.GetComponent<Laser>().YPos = -1;
+
+        audioManager.PlaySoundEffect(AudioManager.SoundEffects.Laser);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -106,7 +134,7 @@ public class Enemy : MonoBehaviour
 
     private void Death()
     {
-  
+
         Speed = 0;
         if (animator == null)
             return;

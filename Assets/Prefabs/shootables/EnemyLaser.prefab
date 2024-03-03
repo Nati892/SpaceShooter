@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: -503343540175209858}
   - component: {fileID: -8552960499615462179}
   m_Layer: 0
-  m_Name: Laser
-  m_TagString: Laser
+  m_Name: EnemyLaser
+  m_TagString: EnemyFire
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 30
   LifeSpan: 20
-  YPos: 1
+  YPos: -1
 --- !u!212 &-852472085390223917
 SpriteRenderer:
   m_ObjectHideFlags: 0

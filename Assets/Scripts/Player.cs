@@ -211,6 +211,17 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        switch (collision.tag)
+        {
+            case "EnemyFire":
+                RecieveDamage();
+                break;
+        
+        }
+    }
+
     private int CurrentEngineHits = 0;
     public void AddEngineHit()
     {

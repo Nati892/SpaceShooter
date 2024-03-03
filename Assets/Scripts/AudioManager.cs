@@ -13,11 +13,15 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField]
     private AudioClip PowerUpClip;
+
+    [SerializeField]
+    private AudioClip LaserClip;
     // Start is called before the first frame update
     public enum SoundEffects
     {
         Explosion = 0,
-        PowerUp = 1,
+        PowerUp,
+        Laser,
     }
     private static AudioManager AManInstance = null;
     public static AudioManager GetInstance()
@@ -42,6 +46,10 @@ public class AudioManager : MonoBehaviour
             case SoundEffects.PowerUp:
                 if (PowerUpClip != null)
                     EffectsAudioSource.PlayOneShot(PowerUpClip);
+                break;
+            case SoundEffects.Laser:
+                if (LaserClip != null)
+                    EffectsAudioSource.PlayOneShot(LaserClip);
                 break;
         }
 
